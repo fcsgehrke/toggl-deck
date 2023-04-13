@@ -1,0 +1,174 @@
+basePath: /api/v1/decks
+definitions:
+  api.HttpError:
+    properties:
+      message:
+        type: string
+    type: object
+  deck.CardResponse:
+    properties:
+      code:
+        type: string
+      suit:
+        type: string
+      value:
+        type: string
+    type: object
+  deck.CreateDeckResponse:
+    properties:
+      deck_id:
+        type: string
+      remaining:
+        type: integer
+      shuffled:
+        type: boolean
+    type: object
+  deck.DrawCardResponse:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/deck.CardResponse'
+        type: array
+    type: object
+  deck.OpenDeckResponse:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/deck.CardResponse'
+        type: array
+      deck_id:
+        type: string
+      remaining:
+        type: integer
+      shuffled:
+        type: boolean
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: fcgehrke@outlook.com
+    name: Felipe C. Gehrke
+    url: https://github.com/fcsgehrke/toggl-deck
+  description: This is a sample deck api for testing purposes.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Toggl Deck API
+  version: "1.0"
+paths:
+  /:
+    post:
+      consumes:
+      - application/json
+      description: Creates new decks with all cards or specific ones. Also, it's possible
+        to shuffle the deck.
+      parameters:
+      - description: Shuffle cards on the deck.
+        in: query
+        name: shuffled
+        type: boolean
+      - description: The card codes to be added to the deck.
+        in: query
+        name: cards
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deck.CreateDeckResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HttpError'
+      summary: Creates a new deck
+  /{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns an existing opened deck with all cards.
+      parameters:
+      - description: The ID (uuid) of the deck.
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deck.OpenDeckResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HttpError'
+      summary: Opens an existing deck
+  /{id}/draw:
+    get:
+      consumes:
+      - application/json
+      description: Draws one or more cards from the deck
+      parameters:
+      - description: The ID (uuid) of the deck.
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: The number of cards to draw from the deck.
+        in: query
+        name: count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deck.DrawCardResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/api.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HttpError'
+      summary: Draws a card from the deck
+swagger: "2.0"
