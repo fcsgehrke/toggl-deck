@@ -38,7 +38,7 @@ func (r *DeckPostgresRepo) Migrate() error {
     r.log.Printf("[ERR] - DB Migrations failed w/ err: %s\n", err.Error())
     return err
   }
-  r.log.Println("[INF] - DB Migrations Run Successfully")
+  r.log.Println("[INF] - DB Migrations Ran Successfully")
   return nil
 }
 
